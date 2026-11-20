@@ -1,0 +1,41 @@
+{% extends "screen/base.html" %}
+
+{% block title %}Home - Screen App{% endblock %}
+
+{% block content %}
+    <h1>Screen</h1>
+    <p class="sub">Posts from the database.</p>
+
+    <form method="get" style="margin-bottom: 1.5rem;">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search title...">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if posts %}
+        {% for post in posts %}
+            <article>
+                <h2><a href="/posts/{{ post.id }}/">{{ post.title }}</a></h2>
+                <p class="meta">
+                    {% if post.author %}by {{ post.author.username }} · {% endif %}{{ post.created_at }}
+                </p>
+                {% if post.image %}
+                    <p><img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100%; height:auto;"></p>
+                {% endif %}
+                <p>{{ post.body }}</p>
+            </article>
+        {% endfor %}
+        <p>
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Previous</a>
+            {% endif %}
+        
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>
+            {% endif %}
+        </p>
+    {% else %}
+        <p class="empty">No posts found. <a href="/add/">Add Post</a></p>
+    {% endif %}
+{% endblock %}

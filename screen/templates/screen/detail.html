@@ -1,0 +1,41 @@
+{% extends "screen/base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+    <p>
+        <a href="/">Back</a>
+        {% if user.is_authenticated and post.author == user %}
+            | <a href="/posts/{{ post.id }}/edit/">Edit</a>
+            | <a href="/posts/{{ post.id }}/delete/">Delete</a>
+        {% endif %}
+    </p>
+    <h1>{{ post.title }}</h1>
+    <p class="meta">
+        {% if post.author %}by {{ post.author.username }} · {% endif %}{{ post.created_at }}
+    </p>    
+
+    {% if post.image %}
+        <p><img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100%; height:auto;"></p>
+    {% endif %}
+    <p>{{ post.body }}</p>
+    <hr>
+    <h2>Comments</h2>
+
+    {% for comment in comments %}
+        <article>
+            <strong>{{ comment.name }}</strong>
+            <p class="meta">{{ comment.created_at }}</p>
+            <p>{{ comment.text }}</p>
+        </article>
+    {% empty %}
+        <p class="empty">No comments yet.</p>
+    {% endfor %}
+
+    <h3>Add a comment</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Post Comment</button>
+    </form>
+{% endblock %}
