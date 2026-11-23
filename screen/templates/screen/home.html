@@ -1,41 +1,44 @@
 {% extends "screen/base.html" %}
 
-{% block title %}Home - SSS{% endblock %}
+{% block title %}Posts · SSS{% endblock %}
 
 {% block content %}
-    <h1>SSS</h1>
-    <p class="sub">Posts from the database.</p>
+    <h1>Operations feed</h1>
+    <p class="sub">Posts and updates from the SSS platform.</p>
 
-    <form method="get" style="margin-bottom: 1.5rem;">
+    <form method="get" class="search-bar">
         <input type="text" name="q" value="{{ query }}" placeholder="Search title...">
-        <button type="submit">Search</button>
+        <button class="btn btn-office" type="submit">Search</button>
+        <a class="btn btn-line" href="{% url 'add_post' %}">Add post</a>
     </form>
 
     {% if posts %}
         {% for post in posts %}
-            <article>
-                <h2><a href="/posts/{{ post.id }}/">{{ post.title }}</a></h2>
+            <article class="post-card">
+                <h2><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></h2>
                 <p class="meta">
                     {% if post.author %}by {{ post.author.username }} · {% endif %}{{ post.created_at }}
                 </p>
                 {% if post.image %}
-                    <p><img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100%; height:auto;"></p>
+                    <img src="{{ post.image.url }}" alt="{{ post.title }}">
                 {% endif %}
-                <p>{{ post.body }}</p>
+                <p class="body">{{ post.body }}</p>
             </article>
         {% endfor %}
-        <p>
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Previous</a>
-            {% endif %}
-        
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-        
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next</a>
-            {% endif %}
-        </p>
+        <div class="pager">
+            <span>
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">← Previous</a>
+                {% endif %}
+            </span>
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            <span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Next →</a>
+                {% endif %}
+            </span>
+        </div>
     {% else %}
-        <p class="empty">No posts found. <a href="/add/">Add Post</a></p>
+        <p class="empty">No posts found. <a href="{% url 'add_post' %}">Add the first post</a></p>
     {% endif %}
 {% endblock %}

@@ -1,29 +1,34 @@
 {% extends "screen/base.html" %}
 
-{% block title %}{{ post.title }}{% endblock %}
+{% block title %}{{ post.title }} · SSS{% endblock %}
 
 {% block content %}
-    <p>
-        <a href="/">Back</a>
+    <div class="actions">
+        <a class="btn btn-muted" href="{% url 'home' %}">← Back to posts</a>
         {% if user.is_authenticated and post.author == user %}
-            | <a href="/posts/{{ post.id }}/edit/">Edit</a>
-            | <a href="/posts/{{ post.id }}/delete/">Delete</a>
+            <a class="btn btn-line" href="{% url 'edit_post' post.id %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'delete_post' post.id %}">Delete</a>
         {% endif %}
-    </p>
+    </div>
+
     <h1>{{ post.title }}</h1>
     <p class="meta">
         {% if post.author %}by {{ post.author.username }} · {% endif %}{{ post.created_at }}
-    </p>    
+    </p>
 
     {% if post.image %}
-        <p><img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100%; height:auto;"></p>
+        <div class="detail-media">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}">
+        </div>
     {% endif %}
     <p>{{ post.body }}</p>
-    <hr>
-    <h2>Comments</h2>
+
+    <hr style="border:0;border-top:1px solid var(--line);margin:1.5rem 0;">
+
+    <h2 style="font-family:Syne,sans-serif;font-size:1.25rem;color:var(--navy);margin:0 0 .75rem;">Comments</h2>
 
     {% for comment in comments %}
-        <article>
+        <article class="comment">
             <strong>{{ comment.name }}</strong>
             <p class="meta">{{ comment.created_at }}</p>
             <p>{{ comment.text }}</p>
@@ -32,10 +37,10 @@
         <p class="empty">No comments yet.</p>
     {% endfor %}
 
-    <h3>Add a comment</h3>
+    <h3 style="margin:1.25rem 0 .75rem;color:var(--navy);">Add a comment</h3>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Post Comment</button>
+        <button type="submit">Post comment</button>
     </form>
 {% endblock %}

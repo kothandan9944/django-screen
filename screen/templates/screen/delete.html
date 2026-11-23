@@ -1,13 +1,15 @@
 {% extends "screen/base.html" %}
 
-{% block title %}Delete Post{% endblock %}
+{% block title %}Delete Post · SSS{% endblock %}
 
 {% block content %}
-    <h1>Delete Post</h1>
-    <p>Delete "{{ post.title }}"?</p>
+    <h1>Delete post</h1>
+    <div class="danger-box">
+        <p style="margin:0;font-weight:650;">Delete “{{ post.title }}”? This cannot be undone.</p>
+    </div>
     <form method="post">
         {% csrf_token %}
-        <button type="submit">Yes, delete</button>
+        <button class="btn btn-danger" type="submit">Yes, delete</button>
+        <a class="btn btn-line" href="{% url 'post_detail' post.id %}" style="margin-left:.5rem;">Cancel</a>
     </form>
-    <p><a href="/posts/{{ post.id }}/">Cancel</a></p>
 {% endblock %}

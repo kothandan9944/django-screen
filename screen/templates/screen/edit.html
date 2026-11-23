@@ -1,15 +1,19 @@
 {% extends "screen/base.html" %}
 
-{% block title %}Edit Post{% endblock %}
+{% block title %}Edit Post · SSS{% endblock %}
 
 {% block content %}
-    <h1>Edit Post</h1>
+    <h1>Edit post</h1>
+    <p class="sub">Update your post details and media.</p>
     {% if post.image %}
-        <p><img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width:100%; height:auto;"></p>
+        <div class="form-preview">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}">
+        </div>
     {% endif %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Update</button>
+        <a class="btn btn-line" href="{% url 'post_detail' post.id %}" style="margin-left:.5rem;">Cancel</a>
     </form>
 {% endblock %}
