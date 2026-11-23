@@ -1,12 +1,235 @@
-{% extends "screen/base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in · Screen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #0b1f24;
+      --teal: #0d9488;
+      --teal-deep: #0f766e;
+      --sand: #f3ebe0;
+      --muted: #5c6b70;
+      --line: #d7e0e2;
+      --danger: #b42318;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Outfit, system-ui, sans-serif;
+      color: var(--ink);
+      background: var(--sand);
+    }
+    .auth {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      min-height: 100vh;
+    }
+    .brand {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(2rem, 5vw, 4rem);
+      color: #f7fffe;
+      background:
+        radial-gradient(900px 500px at 10% 20%, rgba(13,148,136,.55), transparent 55%),
+        radial-gradient(700px 420px at 90% 80%, rgba(243,235,224,.18), transparent 50%),
+        linear-gradient(160deg, #06262c 0%, #0b3d42 45%, #0a1a1e 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      animation: brandIn .8s ease both;
+    }
+    .brand::after {
+      content: "";
+      position: absolute;
+      inset: auto -20% -30% 20%;
+      height: 70%;
+      background: radial-gradient(circle, rgba(13,148,136,.35), transparent 65%);
+      filter: blur(40px);
+      animation: glow 6s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+    .logo {
+      position: relative;
+      z-index: 1;
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+    .logo span {
+      display: block;
+      margin-top: .35rem;
+      font-family: Outfit, sans-serif;
+      font-size: .72rem;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: .75;
+    }
+    .brand-copy {
+      position: relative;
+      z-index: 1;
+      max-width: 22rem;
+    }
+    .brand-copy h2 {
+      margin: 0 0 .75rem;
+      font-family: Fraunces, Georgia, serif;
+      font-size: clamp(1.6rem, 2.5vw, 2.1rem);
+      line-height: 1.2;
+    }
+    .brand-copy p {
+      margin: 0;
+      opacity: .8;
+      line-height: 1.55;
+    }
+    .panel {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.25rem;
+      animation: panelIn .7s .15s ease both;
+    }
+    .card {
+      width: 100%;
+      max-width: 400px;
+    }
+    .card h1 {
+      margin: 0 0 .4rem;
+      font-family: Fraunces, Georgia, serif;
+      font-size: 1.85rem;
+    }
+    .card .sub {
+      margin: 0 0 1.75rem;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+    label {
+      display: block;
+      margin: 0 0 .4rem;
+      font-size: .88rem;
+      font-weight: 600;
+    }
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      margin-bottom: 1rem;
+      padding: .85rem 1rem;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fff;
+      font: inherit;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    input:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 4px rgba(13,148,136,.18);
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin: .25rem 0 1.25rem;
+      font-size: .9rem;
+    }
+    .row a { color: var(--teal-deep); text-decoration: none; font-weight: 600; }
+    .row a:hover { text-decoration: underline; }
+    .remember { display: flex; align-items: center; gap: .45rem; color: var(--muted); }
+    button[type="submit"] {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: .95rem 1rem;
+      font: inherit;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--teal), var(--teal-deep));
+      box-shadow: 0 10px 24px rgba(13,148,136,.28);
+      transition: transform .15s, filter .15s;
+    }
+    button[type="submit"]:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    .foot {
+      margin-top: 1.35rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .foot a { color: var(--teal-deep); font-weight: 700; text-decoration: none; }
+    .errorlist { color: var(--danger); padding-left: 1.1rem; margin: 0 0 .75rem; }
+    @keyframes brandIn {
+      from { opacity: 0; transform: translateX(-12px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes panelIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes glow {
+      from { transform: translateY(0); opacity: .7; }
+      to { transform: translateY(-18px); opacity: 1; }
+    }
+    @media (max-width: 860px) {
+      .auth { grid-template-columns: 1fr; }
+      .brand { min-height: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="auth">
+    <aside class="brand">
+      <div class="logo">
+        Screen
+        <span>Solutions and technologies</span>
+      </div>
+      <div class="brand-copy">
+        <h2>Welcome back.</h2>
+        <p>Sign in to manage posts, comments, and your preferences — clean and fast.</p>
+      </div>
+    </aside>
 
-{% block title %}Login{% endblock %}
+    <main class="panel">
+      <div class="card">
+        <h1>Sign in</h1>
+        <p class="sub">Access your account to continue.</p>
 
-{% block content %}
-    <h1>Login</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Login</button>
-    </form>
-{% endblock %}
+        <form method="post" novalidate>
+          {% csrf_token %}
+          {% if form.non_field_errors %}{{ form.non_field_errors }}{% endif %}
+
+          <label for="id_username">Username</label>
+          {{ form.username }}
+          {{ form.username.errors }}
+
+          <label for="id_password">Password</label>
+          {{ form.password }}
+          {{ form.password.errors }}
+
+          <div class="row">
+            <label class="remember">
+              <input type="checkbox" name="remember" value="1">
+              Remember me
+            </label>
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <button type="submit">Log in</button>
+        </form>
+
+        <p class="foot">
+          New here?
+          <a href="{% url 'signup' %}">Create an account</a>
+        </p>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

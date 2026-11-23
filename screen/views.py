@@ -6,6 +6,10 @@ from .models import Post
 from .forms import PostForm, CommentForm, SignUpForm
 
 
+def landing(request):
+    return render(request, 'screen/landing.html')
+
+
 def home(request):
     query = request.GET.get('q', '')
     posts = Post.objects.all().order_by('-created_at')
