@@ -3,203 +3,321 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign in · Screen</title>
+  <title>Sign in · SSS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #0b1f24;
-      --teal: #0d9488;
-      --teal-deep: #0f766e;
-      --sand: #f3ebe0;
-      --muted: #5c6b70;
-      --line: #d7e0e2;
+      /* Office palette */
+      --office: #28748C;
+      --office-mid: #3D8CA3;
+      --office-light: #4F9CB3;
+      --office-deep: #1c5568;
+      --harbor: #0f2a35;
+      --foam: #f4f8fa;
+      --mist: #5f7580;
+      --steel: #c5d8e0;
+      --line: #cfe0e6;
       --danger: #b42318;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: Outfit, system-ui, sans-serif;
-      color: var(--ink);
-      background: var(--sand);
+      font-family: Manrope, system-ui, sans-serif;
+      color: var(--harbor);
+      background: #e8f1f4;
     }
     .auth {
       display: grid;
-      grid-template-columns: 1.05fr 1fr;
+      grid-template-columns: 1.08fr 1fr;
       min-height: 100vh;
+      min-height: 100dvh;
     }
     .brand {
       position: relative;
       overflow: hidden;
-      padding: clamp(2rem, 5vw, 4rem);
-      color: #f7fffe;
-      background:
-        radial-gradient(900px 500px at 10% 20%, rgba(13,148,136,.55), transparent 55%),
-        radial-gradient(700px 420px at 90% 80%, rgba(243,235,224,.18), transparent 50%),
-        linear-gradient(160deg, #06262c 0%, #0b3d42 45%, #0a1a1e 100%);
+      color: var(--foam);
+      padding: clamp(1.75rem, 4vw, 3rem);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      animation: brandIn .8s ease both;
+      isolation: isolate;
+      animation: rise .75s ease both;
     }
-    .brand::after {
+    .brand-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      background: var(--harbor);
+    }
+    .brand-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(1.1);
+      filter: saturate(1.05) contrast(1.06);
+      animation: oceanPan 22s ease-in-out infinite alternate;
+    }
+    .brand-bg::after {
       content: "";
       position: absolute;
-      inset: auto -20% -30% 20%;
-      height: 70%;
-      background: radial-gradient(circle, rgba(13,148,136,.35), transparent 65%);
-      filter: blur(40px);
-      animation: glow 6s ease-in-out infinite alternate;
+      inset: 0;
+      background:
+        linear-gradient(160deg, rgba(15,42,53,.9) 0%, rgba(40,116,140,.45) 45%, rgba(15,42,53,.88) 100%),
+        radial-gradient(ellipse 70% 50% at 70% 70%, rgba(79,156,179,.28), transparent 55%);
+    }
+    .lanes {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      opacity: .3;
       pointer-events: none;
+      background-image: linear-gradient(120deg, transparent 0 52%, rgba(201,214,220,.18) 52.5%, transparent 53%);
+      animation: laneShift 12s linear infinite;
     }
     .logo {
       position: relative;
       z-index: 1;
-      font-family: Fraunces, Georgia, serif;
-      font-size: clamp(1.8rem, 3vw, 2.4rem);
-      font-weight: 700;
-      letter-spacing: .02em;
+    }
+    .logo strong {
+      display: block;
+      font-family: Bebas Neue, Impact, sans-serif;
+      font-size: clamp(3rem, 7vw, 4.6rem);
+      letter-spacing: .06em;
+      line-height: .9;
     }
     .logo span {
       display: block;
-      margin-top: .35rem;
-      font-family: Outfit, sans-serif;
+      margin-top: .55rem;
+      max-width: 14rem;
       font-size: .72rem;
-      font-weight: 500;
+      font-weight: 700;
       letter-spacing: .18em;
       text-transform: uppercase;
-      opacity: .75;
+      color: var(--steel);
+      line-height: 1.4;
     }
     .brand-copy {
       position: relative;
       z-index: 1;
       max-width: 22rem;
+      animation: rise .85s .15s ease both;
+    }
+    .brand-copy .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      margin-bottom: .85rem;
+      color: var(--office-light);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .brand-copy .tag::before {
+      content: "";
+      width: 1.5rem;
+      height: 2px;
+      background: var(--office-light);
     }
     .brand-copy h2 {
-      margin: 0 0 .75rem;
-      font-family: Fraunces, Georgia, serif;
-      font-size: clamp(1.6rem, 2.5vw, 2.1rem);
-      line-height: 1.2;
+      margin: 0 0 .7rem;
+      font-family: Bebas Neue, Impact, sans-serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      letter-spacing: .04em;
+      line-height: .95;
     }
     .brand-copy p {
       margin: 0;
-      opacity: .8;
-      line-height: 1.55;
+      color: rgba(244,247,245,.82);
+      line-height: 1.6;
+      font-weight: 500;
     }
+    .stack {
+      position: absolute;
+      right: 8%;
+      bottom: 18%;
+      display: flex;
+      align-items: flex-end;
+      gap: .28rem;
+      z-index: 1;
+      opacity: .85;
+      pointer-events: none;
+    }
+    .stack i {
+      display: block;
+      width: 1.7rem;
+      border-radius: 2px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), 0 8px 18px rgba(0,0,0,.3);
+    }
+    .stack .a { height: 2.8rem; background: #4F9CB3; animation: lift 3s ease-in-out infinite alternate; }
+    .stack .b { height: 3.8rem; background: #28748C; animation: lift 3.4s .2s ease-in-out infinite alternate; }
+    .stack .c { height: 2.4rem; background: #3D8CA3; animation: lift 2.8s .4s ease-in-out infinite alternate; }
+    .stack .d { height: 4.4rem; background: #1c5568; animation: lift 3.2s .1s ease-in-out infinite alternate; }
+
     .panel {
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 2rem 1.25rem;
-      animation: panelIn .7s .15s ease both;
+      animation: rise .7s .1s ease both;
     }
     .card {
       width: 100%;
       max-width: 400px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 2rem 1.6rem 1.7rem;
+      box-shadow: 0 24px 60px rgba(2,11,18,.08);
     }
     .card h1 {
-      margin: 0 0 .4rem;
-      font-family: Fraunces, Georgia, serif;
-      font-size: 1.85rem;
+      margin: 0 0 .35rem;
+      font-family: Bebas Neue, Impact, sans-serif;
+      font-size: 2.4rem;
+      letter-spacing: .05em;
     }
     .card .sub {
-      margin: 0 0 1.75rem;
-      color: var(--muted);
+      margin: 0 0 1.6rem;
+      color: var(--mist);
       font-size: .95rem;
+      font-weight: 500;
     }
     label {
       display: block;
       margin: 0 0 .4rem;
-      font-size: .88rem;
-      font-weight: 600;
+      font-size: .84rem;
+      font-weight: 700;
     }
     input[type="text"],
-    input[type="email"],
     input[type="password"] {
       width: 100%;
       margin-bottom: 1rem;
-      padding: .85rem 1rem;
+      padding: .9rem 1rem;
       border: 1px solid var(--line);
-      border-radius: 12px;
-      background: #fff;
+      border-radius: 14px;
+      background: #f7fafb;
       font: inherit;
-      transition: border-color .2s, box-shadow .2s;
+      transition: border-color .2s, box-shadow .2s, background .2s;
     }
     input:focus {
       outline: none;
-      border-color: var(--teal);
-      box-shadow: 0 0 0 4px rgba(13,148,136,.18);
+      background: #fff;
+      border-color: var(--office);
+      box-shadow: 0 0 0 4px rgba(40,116,140,.2);
     }
     .row {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 1rem;
-      margin: .25rem 0 1.25rem;
-      font-size: .9rem;
+      margin: .15rem 0 1.25rem;
+      font-size: .88rem;
     }
-    .row a { color: var(--teal-deep); text-decoration: none; font-weight: 600; }
+    .row a {
+      color: var(--office);
+      text-decoration: none;
+      font-weight: 700;
+    }
     .row a:hover { text-decoration: underline; }
-    .remember { display: flex; align-items: center; gap: .45rem; color: var(--muted); }
+    .remember {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      color: var(--mist);
+      font-weight: 600;
+      margin: 0;
+    }
     button[type="submit"] {
       width: 100%;
       border: 0;
-      border-radius: 12px;
-      padding: .95rem 1rem;
+      border-radius: 999px;
+      padding: 1rem 1.1rem;
       font: inherit;
-      font-weight: 700;
+      font-weight: 800;
       color: #fff;
       cursor: pointer;
-      background: linear-gradient(135deg, var(--teal), var(--teal-deep));
-      box-shadow: 0 10px 24px rgba(13,148,136,.28);
+      background: linear-gradient(135deg, var(--office-light), var(--office-deep));
+      box-shadow: 0 14px 34px rgba(40,116,140,.35);
       transition: transform .15s, filter .15s;
     }
-    button[type="submit"]:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    button[type="submit"]:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
     .foot {
-      margin-top: 1.35rem;
+      margin-top: 1.3rem;
       text-align: center;
-      color: var(--muted);
+      color: var(--mist);
       font-size: .92rem;
+      font-weight: 500;
     }
-    .foot a { color: var(--teal-deep); font-weight: 700; text-decoration: none; }
-    .errorlist { color: var(--danger); padding-left: 1.1rem; margin: 0 0 .75rem; }
-    @keyframes brandIn {
-      from { opacity: 0; transform: translateX(-12px); }
+    .foot a {
+      color: var(--office);
+      font-weight: 800;
+      text-decoration: none;
+    }
+    .errorlist {
+      color: var(--danger);
+      padding-left: 1.1rem;
+      margin: 0 0 .75rem;
+    }
+
+    @keyframes oceanPan {
+      from { transform: scale(1.1) translate3d(0,0,0); }
+      to { transform: scale(1.16) translate3d(-2%, 1%, 0); }
+    }
+    @keyframes laneShift {
+      from { background-position: 0 0; }
+      to { background-position: 70px 0; }
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: none; }
     }
-    @keyframes panelIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: none; }
-    }
-    @keyframes glow {
-      from { transform: translateY(0); opacity: .7; }
-      to { transform: translateY(-18px); opacity: 1; }
+    @keyframes lift {
+      from { transform: translateY(0); }
+      to { transform: translateY(-8px); }
     }
     @media (max-width: 860px) {
       .auth { grid-template-columns: 1fr; }
-      .brand { min-height: 220px; }
+      .brand { min-height: 280px; }
+      .stack { display: none; }
     }
   </style>
 </head>
 <body>
   <div class="auth">
     <aside class="brand">
+      <div class="brand-bg" aria-hidden="true">
+        <img src="/media/ship.jpg" alt="Cargo ship and containers" width="1600" height="2000">
+      </div>
+      <div class="lanes" aria-hidden="true"></div>
+      <div class="stack" aria-hidden="true">
+        <i class="a"></i>
+        <i class="b"></i>
+        <i class="c"></i>
+        <i class="d"></i>
+      </div>
+
       <div class="logo">
-        Screen
-        <span>Solutions and technologies</span>
+        <strong>SSS</strong>
+        <span>Solutions and Technologies</span>
       </div>
       <div class="brand-copy">
-        <h2>Welcome back.</h2>
-        <p>Sign in to manage posts, comments, and your preferences — clean and fast.</p>
+        <div class="tag">Harbor access</div>
+        <h2>Welcome aboard.</h2>
+        <p>Sign in to steer posts, schedules, and preferences — built for clear seas and clean control.</p>
       </div>
     </aside>
 
     <main class="panel">
       <div class="card">
         <h1>Sign in</h1>
-        <p class="sub">Access your account to continue.</p>
+        <p class="sub">Access your SSS account to continue.</p>
 
         <form method="post" novalidate>
           {% csrf_token %}
@@ -225,7 +343,7 @@
         </form>
 
         <p class="foot">
-          New here?
+          New to SSS?
           <a href="{% url 'signup' %}">Create an account</a>
         </p>
       </div>
