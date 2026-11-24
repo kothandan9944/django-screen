@@ -1,9 +1,23 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Post
 from .forms import PostForm, CommentForm, SignUpForm
+
+
+class RememberLoginView(LoginView):
+    template_name = 'registration/login.html'
+    redirect_authenticated_user = True
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        if self.request.POST.get('remember'):
+            self.request.session.set_expiry(60 * 60 * 24 * 14)
+        else:
+            self.request.session.set_expiry(0)
+        return response
 
 
 def landing(request):
@@ -12,7 +26,7 @@ def landing(request):
 
 def home(request):
     query = request.GET.get('q', '')
-    posts = Post.objects.all().order_by('-created_at')
+    posts = Post.objects.select_related('author').order_by('-created_at')
     if query:
         posts = posts.filter(title__icontains=query)
 
@@ -28,7 +42,7 @@ def home(request):
 
 
 def post_detail(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(Post.objects.select_related('author'), pk=pk)
     comments = post.comments.all().order_by('-created_at')
 
     if request.method == 'POST':
@@ -66,7 +80,7 @@ def add_post(request):
 
 @login_required
 def edit_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(Post.objects.select_related('author'), pk=pk)
     if post.author != request.user:
         messages.error(request, 'You can only edit your own posts.')
         return redirect('post_detail', pk=post.pk)
@@ -83,7 +97,7 @@ def edit_post(request, pk):
 
 @login_required
 def delete_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = get_object_or_404(Post.objects.select_related('author'), pk=pk)
     if post.author != request.user:
         messages.error(request, 'You can only delete your own posts.')
         return redirect('post_detail', pk=post.pk)

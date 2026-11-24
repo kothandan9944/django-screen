@@ -65,9 +65,10 @@
       <label for="id_password">Password</label>
       {{ form.password }}
       {{ form.password.errors }}
+      <input type="hidden" name="next" value="{{ next }}">
       <div class="row">
         <label class="remember"><input type="checkbox" name="remember" value="1"> Remember me</label>
-        <a href="#">Forgot password?</a>
+        <a href="{% url 'password_reset' %}">Forgot password?</a>
       </div>
       <button type="submit">Log in</button>
     </form>

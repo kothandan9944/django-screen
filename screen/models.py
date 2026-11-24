@@ -15,6 +15,11 @@ class Post(models.Model):
     image = models.ImageField(upload_to='posts/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['created_at'], name='screen_post_created_idx'),
+        ]
+
     def __str__(self):
         return self.title
 
