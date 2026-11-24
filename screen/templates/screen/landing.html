@@ -66,12 +66,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .brand i {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: linear-gradient(160deg, #5eb0c4, var(--deep));
-      box-shadow: inset 0 0 0 6px rgba(255,255,255,.18);
+    .brand img {
+      width: 42px;
+      height: 42px;
+      flex: none;
+      display: block;
+      object-fit: contain;
     }
     .links { display: flex; gap: .2rem; }
     .links a {
@@ -440,7 +440,7 @@
   <header class="nav">
     <div class="wrap nav-inner">
       <a class="brand" href="{% url 'landing' %}">
-        <i aria-hidden="true"></i>
+        <img src="{% static 'screen/logo.svg' %}" alt="">
         <span class="brand-name">Schedule Sync Service</span>
       </a>
       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu" aria-label="Open menu">
