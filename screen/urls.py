@@ -9,4 +9,5 @@ urlpatterns = [
     path('posts/<int:pk>/delete/', views.delete_post, name='delete_post'),
     path('add/', views.add_post, name='add_post'),
     path('signup/', views.signup, name='signup'),
-]
+path('api/posts/', views.posts_api, name='posts_api'),
+path('api/posts/<int:pk>/', views.post_detail_api, name='post_detail_api'),]

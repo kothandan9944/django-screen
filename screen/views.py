@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 from .models import Post
 from .forms import PostForm, CommentForm, SignUpForm
 
@@ -118,3 +119,39 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'screen/signup.html', {'form': form})
+
+
+def posts_api(request):
+    posts = Post.objects.select_related('author').order_by('-created_at')
+    data = []
+    for post in posts:
+        data.append({
+            'id': post.pk,
+            'title': post.title,
+            'body': post.body,
+            'author': post.author.username if post.author else '',
+            'image': request.build_absolute_uri(post.image.url) if post.image else '',
+            'created_at': post.created_at.isoformat(),
+        })
+    return JsonResponse({'posts': data})
+
+
+def post_detail_api(request, pk):
+    post = get_object_or_404(Post.objects.select_related('author'), pk=pk)
+    comments = [
+        {
+            'name': comment.name,
+            'text': comment.text,
+            'created_at': comment.created_at.isoformat(),
+        }
+        for comment in post.comments.order_by('-created_at')
+    ]
+    return JsonResponse({
+        'id': post.pk,
+        'title': post.title,
+        'body': post.body,
+        'author': post.author.username if post.author else '',
+        'image': request.build_absolute_uri(post.image.url) if post.image else '',
+        'created_at': post.created_at.isoformat(),
+        'comments': comments,
+    })
